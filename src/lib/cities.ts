@@ -1,0 +1,18 @@
+export const CITIES: { name: string; lat: number; lon: number }[] = [
+  { name: "Lahore", lat: 31.5204, lon: 74.3587 },
+  { name: "Karachi", lat: 24.8607, lon: 67.0011 },
+  { name: "Islamabad", lat: 33.6844, lon: 73.0479 },
+  { name: "Rawalpindi", lat: 33.5651, lon: 73.0169 },
+  { name: "Faisalabad", lat: 31.4504, lon: 73.135 },
+  { name: "Multan", lat: 30.1575, lon: 71.5249 },
+  { name: "Peshawar", lat: 34.0151, lon: 71.5249 },
+  { name: "Quetta", lat: 30.1798, lon: 66.975 },
+  { name: "Hyderabad", lat: 25.396, lon: 68.3578 },
+  { name: "Gujranwala", lat: 32.1877, lon: 74.1945 },
+  { name: "Sialkot", lat: 32.4945, lon: 74.5229 },
+  { name: "Bahawalpur", lat: 29.3956, lon: 71.6836 },
+  { name: "Sargodha", lat: 32.0836, lon: 72.6711 },
+  { name: "Sukkur", lat: 27.7052, lon: 68.8574 },
+  { name: "Abbottabad", lat: 34.1688, lon: 73.2215 },
+  { name: "Gwadar", lat: 25.1216, lon: 62.3254 },
+];
