@@ -3,10 +3,6 @@
 
 type Part = { text: string } | { inline_data: { mime_type: string; data: string } };
 
-export function aiEnabled() {
-  return Boolean(process.env.GEMINI_API_KEY);
-}
-
 export async function gemini(parts: Part[], opts: { json?: boolean; temperature?: number } = {}): Promise<string> {
   const key = process.env.GEMINI_API_KEY;
   if (!key) throw new Error("GEMINI_API_KEY is not set");

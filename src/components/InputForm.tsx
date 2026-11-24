@@ -14,6 +14,23 @@ const MapPicker = dynamic(() => import("./MapPicker"), {
 
 const FT = 3.28084;
 
+/** Shrink phone photos (often 5–10 MB) to ~1600 px JPEG so the AI accepts them and uploads are fast. */
+async function compressImage(file: File): Promise<File> {
+  if (!file.type.startsWith("image/") || file.size < 900_000) return file;
+  try {
+    const bitmap = await createImageBitmap(file);
+    const scale = Math.min(1, 1600 / Math.max(bitmap.width, bitmap.height));
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.round(bitmap.width * scale);
+    canvas.height = Math.round(bitmap.height * scale);
+    canvas.getContext("2d")!.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+    const blob = await new Promise<Blob | null>((r) => canvas.toBlob(r, "image/jpeg", 0.85));
+    return blob ? new File([blob], "bill.jpg", { type: "image/jpeg" }) : file;
+  } catch {
+    return file;
+  }
+}
+
 type BillResult = {
   disco: string | null;
   customerName: string | null;
@@ -46,9 +63,10 @@ export default function InputForm({
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [showBrand, setShowBrand] = useState(false);
 
-  async function readBill(file: File) {
+  async function readBill(original: File) {
     setBillState({ status: "reading" });
     try {
+      const file = await compressImage(original);
       const fd = new FormData();
       fd.append("file", file);
       const res = await fetch("/api/parse-bill", { method: "POST", body: fd });

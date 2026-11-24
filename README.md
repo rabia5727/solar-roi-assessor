@@ -24,7 +24,7 @@ Location ─► NASA POWER API ─► Calculation engine ─► AI summary ─�
 3. **Losses**: heat loss (−0.34%/°C above 25 °C cell temperature, often −10% in a Pakistani June), dust/smog, inverter, wiring, mismatch.
 4. **Energy balance**, month by month for 25 years: self-consumed solar, battery-shifted solar, exports at the buyback rate, remaining grid imports. Includes panel degradation, tariff escalation, maintenance, and inverter and battery replacements.
 5. **Finance**: cumulative cash flow, payback, NPV, IRR, CO₂ avoided.
-6. **AI** (Gemini): reads bill photos (units, rate, sanctioned load, 12-month history) and writes the summary. **All numbers come from the engine.** The AI is only given pre-calculated facts.
+6. **AI** (Groq or Gemini): reads bill photos (units, rate, sanctioned load, 12-month history) and writes the summary. **All numbers come from the engine.** The AI is only given pre-calculated facts.
 
 ## Prices: automatic + admin (hybrid)
 
@@ -48,15 +48,15 @@ npm run dev                    # http://localhost:3000
 
 On Windows PowerShell, use `copy .env.example .env.local`.
 
-Get a free Gemini key at https://aistudio.google.com/apikey. Without a key, the app still works: bill reading is turned off and the summary uses a built-in English/Urdu template.
+AI is optional. Add a free Groq key (https://console.groq.com/keys) or Gemini key (https://aistudio.google.com/apikey). Without a key, the app still works: bill reading is turned off and the summary uses a built-in English/Urdu template.
 
 ## Deploy
 
-Push to GitHub and import into [Vercel](https://vercel.com). Under Environment Variables add `GEMINI_API_KEY`, `ADMIN_PASSWORD` and `CRON_SECRET`. Then connect a free Upstash Redis database (Vercel → Storage), which adds `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN`, so admin changes and live prices are saved.
+Push to GitHub and import into [Vercel](https://vercel.com). Under Environment Variables add `GROQ_API_KEY` (or `GEMINI_API_KEY`), `ADMIN_PASSWORD` and `CRON_SECRET`. Then connect a free Upstash Redis database (Vercel → Storage), which adds `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN`, so admin changes and live prices are saved.
 
 ## Tech
 
-Next.js 15 (App Router) · TypeScript · Tailwind CSS 4 · Recharts · React-Leaflet / OpenStreetMap · Gemini API · NASA POWER API
+Next.js 15 (App Router) · TypeScript · Tailwind CSS 4 · Recharts · React-Leaflet / OpenStreetMap · Groq / Gemini API · NASA POWER API
 
 Report links encode the inputs in the URL, so sharing needs no database.
 

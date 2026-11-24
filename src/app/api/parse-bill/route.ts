@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { aiEnabled, gemini } from "@/lib/gemini";
+import { aiEnabled, aiVisionJson } from "@/lib/ai";
 
 export const runtime = "nodejs";
 
-const MAX_BYTES = 8 * 1024 * 1024;
+const MAX_BYTES = 8 * 1024 * 1024; // photos are compressed in the browser before upload
 
 const PROMPT = `You are reading a Pakistani electricity bill (LESCO, IESCO, FESCO, GEPCO, MEPCO, PESCO, HESCO, SEPCO, QESCO, TESCO or K-Electric).
 Extract the fields below. Return ONLY JSON with exactly these keys:
@@ -26,7 +26,7 @@ const MONTH_IDX: Record<string, number> = {
 export async function POST(req: NextRequest) {
   if (!aiEnabled()) {
     return NextResponse.json(
-      { error: "Bill reading needs an AI key. Add GEMINI_API_KEY to .env.local (free at aistudio.google.com)." },
+      { error: "Bill reading needs an AI key. Add GROQ_API_KEY (console.groq.com) or GEMINI_API_KEY (aistudio.google.com) to .env.local and restart." },
       { status: 503 },
     );
   }
@@ -41,11 +41,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const data = Buffer.from(await file.arrayBuffer()).toString("base64");
-    const text = await gemini([{ text: PROMPT }, { inline_data: { mime_type: mime, data } }], {
-      json: true,
-      temperature: 0,
-    });
-    const parsed = JSON.parse(text.replace(/^```json\s*|```$/g, ""));
+    const parsed = await aiVisionJson(PROMPT, mime, data);
 
     // Map bill history onto calendar months Jan..Dec
     let monthlyHistory: number[] | null = null;
